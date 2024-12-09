@@ -1,5 +1,5 @@
 {
-  "name": "dependency-checker",
+  "name": "dependency-checker-cli",
   "version": "1.0.0",
   "description": "A CLI tool to check npm dependencies and their upgrade status",
   "main": "index.js",
