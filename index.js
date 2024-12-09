@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const fetch = require('node-fetch');
 const chalk = require('chalk');
 const semver = require('semver');
 const { format, differenceInDays } = require('date-fns');
