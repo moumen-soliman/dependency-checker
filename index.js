@@ -39,8 +39,27 @@ function createHyperlink(label, url) {
     return `\u001b]8;;${url}\u0007${label}\u001b]8;;\u0007`;
 }
 
+// Simple loading spinner
+function startLoading(message) {
+    const frames = ['-', '\\', '|', '/'];
+    let i = 0;
+
+    const interval = setInterval(() => {
+        process.stdout.write(`\r${chalk.cyan(frames[i++ % frames.length])} ${message}`);
+    }, 100);
+
+    return () => {
+        clearInterval(interval);
+        process.stdout.write('\r');
+    };
+}
+
 // Main function
 async function main() {
+    const args = process.argv.slice(2);
+    const checkIndex = args.indexOf('--check');
+    const checkPackage = checkIndex !== -1 && args[checkIndex + 1] ? args[checkIndex + 1] : null;
+
     console.log(chalk.bold.cyan('\nChecking dependencies...\n'));
 
     // Read package.json
@@ -58,8 +77,21 @@ async function main() {
         ...packageJson.overrides,
     };
 
+    let filteredDependencies;
+
+    if (checkPackage) {
+        if (!dependencies[checkPackage]) {
+            console.error(chalk.red(`Error: Package '${checkPackage}' not found in dependencies.`));
+            process.exit(1);
+        }
+        filteredDependencies = { [checkPackage]: dependencies[checkPackage] };
+    } else {
+        filteredDependencies = dependencies;
+    }
+
+    const stopLoading = startLoading('Fetching package information...');
     const results = await Promise.all(
-        Object.entries(dependencies).map(async ([packageName, currentVersionRange]) => {
+        Object.entries(filteredDependencies).map(async ([packageName, currentVersionRange]) => {
             const versionInfo = await getLastVersionInfo(packageName);
             if (versionInfo) {
                 const { latestVersion, latestVersionDate } = versionInfo;
@@ -68,6 +100,7 @@ async function main() {
             }
         })
     );
+    stopLoading();
 
     const currentDate = new Date();
 
