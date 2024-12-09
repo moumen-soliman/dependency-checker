@@ -44,7 +44,7 @@ dependency-checker-cli --check <package-name>
 
 Example:
 ```bash
-dependency-checker-cli --check lodash
+dependency-checker-cli --check date-fns
 ```
 
 ---
@@ -55,41 +55,42 @@ dependency-checker-cli --check lodash
 ```bash
 Checking dependencies...
 
-  ⚡ Recent | ✔ Up-to-date | Yes / No (Self-Upgrade)
-
-  Package Name           | Current Version   | Latest Version    | Published Date   | Will Self-Upgrade
-  -------------------------------------------------------------------------------------
-  ⚡ lodash               | ^4.17.0          | 4.17.21           | 2023-12-05       | Yes
-  ✔ chalk                | ^5.0.0           | 5.1.2             | 2023-10-10       | Yes
-  ✔ axios                | ~1.1.0           | 1.2.3             | 2023-08-10       | No
+ ✔ date-fns
+  Current Version  : ^4.1.0
+  Latest Version   : 4.1.0
+  Published Date   : 2024-09-17
+  Will Self-Upgrade: Yes
+------------------------------------------------------------
+✔ semver
+  Current Version  : ^7.6.3
+  Latest Version   : 7.6.3
+  Published Date   : 2024-07-17
+  Will Self-Upgrade: Yes
+------------------------------------------------------------
+✔ chalk
+  Current Version  : ^4.1.2
+  Latest Version   : 5.3.0
+  Published Date   : 2023-06-29
+  Will Self-Upgrade: No
+------------------------------------------------------------
 
 Dependency check completed.
 ```
 
 ### **Check a Specific Package**
 ```bash
-dependency-checker-cli --check lodash
+dependency-checker-cli --check date-fns
 
 Checking dependencies...
 
-  ⚡ Recent | ✔ Up-to-date | Yes / No (Self-Upgrade)
+✔ date-fns
+  Current Version  : ^4.1.0
+  Latest Version   : 4.1.0
+  Published Date   : 2024-09-17
+  Will Self-Upgrade: Yes
+  Dependency check completed.
 
-  Package Name           | Current Version   | Latest Version    | Published Date   | Will Self-Upgrade
-  -------------------------------------------------------------------------------------
-  ⚡ lodash               | ^4.17.0          | 4.17.21           | 2023-12-05       | Yes
-
-Dependency check completed.
 ```
-
----
-
-## **Options**
-
-| Option            | Description                                        | Example                     |
-|--------------------|----------------------------------------------------|-----------------------------|
-| `--check`          | Analyze a specific package by name.               | `--check lodash`            |
-
----
 
 ## **How It Works**
 1. Parses `dependencies`, `devDependencies`, and `overrides` from your `package.json`.
