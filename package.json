@@ -1,6 +1,6 @@
 {
   "name": "dependency-checker-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CLI tool to check npm dependencies and their upgrade status",
   "main": "index.js",
   "scripts": {
@@ -11,10 +11,16 @@
     "url": "git+https://github.com/moumen-soliman/dependency-checker.git"
   },
   "keywords": [
-    "[\"dependencies\"",
-    "\"checker\"",
-    "\"npm\"",
-    "\"cli\"]"
+    "npm",
+    "dependencies",
+    "dependency-checker",
+    "cli-tool",
+    "dependency-upgrade",
+    "package.json",
+    "dependency-analysis",
+    "semantic-versioning",
+    "npm-cli",
+    "version-checker"
   ],
   "author": "Moumen Soliman",
   "license": "ISC",
