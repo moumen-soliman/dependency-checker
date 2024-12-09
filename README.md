@@ -18,12 +18,12 @@ A powerful CLI tool to analyze npm dependencies in your `package.json`. It check
 
 1. Install globally from npm:
    ```bash
-   npm install -g dependency-checker
+   npm install -g dependency-checker-cli
    ```
 
 2. Or use directly in your project:
    ```bash
-   npm install dependency-checker --save-dev
+   npm install dependency-checker-cli --save-dev
    ```
 
 ---
@@ -33,18 +33,18 @@ A powerful CLI tool to analyze npm dependencies in your `package.json`. It check
 ### **Check All Dependencies**
 Run the tool in the directory containing your `package.json`:
 ```bash
-dependency-checker
+dependency-checker-cli
 ```
 
 ### **Check a Specific Package**
 To analyze a specific package, use the `--check` option:
 ```bash
-dependency-checker --check <package-name>
+dependency-checker-cli --check <package-name>
 ```
 
 Example:
 ```bash
-dependency-checker --check lodash
+dependency-checker-cli --check lodash
 ```
 
 ---
@@ -68,7 +68,7 @@ Dependency check completed.
 
 ### **Check a Specific Package**
 ```bash
-dependency-checker --check lodash
+dependency-checker-cli --check lodash
 
 Checking dependencies...
 
@@ -105,8 +105,8 @@ Dependency check completed.
 ### Run Locally
 1. Clone the repository:
    ```bash
-   git clone https://github.com/moumen-soliman/dependency-checker.git
-   cd dependency-checker
+   git clone https://github.com/moumen-soliman/dependency-checker-cli.git
+   cd dependency-checker-cli
    ```
 
 2. Install dependencies:
@@ -121,7 +121,7 @@ Dependency check completed.
 
 4. Run the tool:
    ```bash
-   dependency-checker
+   dependency-checker-cli
    ```
 
 ---
