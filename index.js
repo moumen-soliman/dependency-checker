@@ -10,43 +10,56 @@ async function getLastVersionInfo(packageName) {
     const url = `https://registry.npmjs.org/${packageName}`;
     try {
         const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
-        const latestVersion = data['dist-tags'].latest;
-        const latestVersionDate = data.time[latestVersion];
+        const latestVersion = data['dist-tags']?.latest;
+        const latestVersionDate = latestVersion ? data.time[latestVersion] : null;
+
+        if (!latestVersion) {
+            console.warn(chalk.yellow(`No 'latest' version found for package: ${packageName}`));
+        }
+
         return { packageName, latestVersion, latestVersionDate };
     } catch (error) {
-        console.error(`Failed to fetch data for ${packageName}:`, error);
-        return null;
+        console.error(chalk.red(`Failed to fetch data for ${packageName}: ${error.message}`));
+        return { packageName, latestVersion: null, latestVersionDate: null };
     }
 }
 
 // Check if the latest version satisfies the current range
 function willSelfUpgrade(currentVersionRange, latestVersion) {
+    if (!latestVersion) return false;
     return semver.satisfies(latestVersion, currentVersionRange);
+}
+
+// Format hyperlink
+function createHyperlink(label, url) {
+    return `\u001b]8;;${url}\u0007${label}\u001b]8;;\u0007`;
 }
 
 // Main function
 async function main() {
-    const args = process.argv.slice(2);
-    const checkPackage = args.includes('--check') ? args[args.indexOf('--check') + 1] : null;
-
     console.log(chalk.bold.cyan('\nChecking dependencies...\n'));
 
     // Read package.json
-    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
+    let packageJson;
+    try {
+        packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
+    } catch (error) {
+        console.error(chalk.red(`Error: Could not read or parse 'package.json'. Ensure the file exists and is properly formatted.`));
+        process.exit(1);
+    }
+
     const dependencies = {
         ...packageJson.dependencies,
         ...packageJson.devDependencies,
         ...packageJson.overrides,
     };
 
-    // If --check is specified, filter dependencies to only the specified package
-    const filteredDependencies = checkPackage
-        ? { [checkPackage]: dependencies[checkPackage] }
-        : dependencies;
-
     const results = await Promise.all(
-        Object.entries(filteredDependencies).map(async ([packageName, currentVersionRange]) => {
+        Object.entries(dependencies).map(async ([packageName, currentVersionRange]) => {
             const versionInfo = await getLastVersionInfo(packageName);
             if (versionInfo) {
                 const { latestVersion, latestVersionDate } = versionInfo;
@@ -58,36 +71,29 @@ async function main() {
 
     const currentDate = new Date();
 
-    console.log(
-        chalk.bold.magenta(
-            `\n  Package Name           | Current Version   | Latest Version    | Published Date   | Will Self-Upgrade`
-        )
-    );
-    console.log(
-        chalk.magenta(
-            `  -------------------------------------------------------------------------------------`
-        )
-    );
-
     results
-        .filter(Boolean) // Exclude any failed fetches
+        .filter(Boolean)
         .sort((a, b) => new Date(b.latestVersionDate) - new Date(a.latestVersionDate))
         .forEach(result => {
             const { packageName, currentVersionRange, latestVersion, latestVersionDate, selfUpgrade } = result;
-            const publishDate = new Date(latestVersionDate);
-            const isNear = differenceInDays(publishDate, currentDate) <= 10 && publishDate > currentDate;
+            const publishDate = latestVersionDate ? new Date(latestVersionDate) : null;
+            const isNear = publishDate && differenceInDays(publishDate, currentDate) <= 10 && publishDate > currentDate;
 
             const statusIcon = isNear ? chalk.yellow('⚡') : chalk.green('✔');
-            const selfUpgradeStatus = selfUpgrade ? chalk.green('Yes') : chalk.red('No');
-            const formattedDate = format(publishDate, 'yyyy-MM-dd');
+            const formattedDate = publishDate ? format(publishDate, 'yyyy-MM-dd') : 'N/A';
+            const packageLink = createHyperlink(packageName, `https://www.npmjs.com/package/${packageName}`);
+            const versionLink = latestVersion
+                ? createHyperlink(latestVersion, `https://www.npmjs.com/package/${packageName}/v/${latestVersion}`)
+                : 'N/A';
 
+            console.log(chalk.bold(`${statusIcon} ${packageLink}`));
+            console.log(chalk.magenta(`  Current Version  : ${currentVersionRange || 'N/A'}`));
+            console.log(chalk.blue(`  Latest Version   : ${versionLink}`));
+            console.log(chalk.gray(`  Published Date   : ${formattedDate}`));
             console.log(
-                `  ${statusIcon} ${chalk.bold(packageName.padEnd(20))} | ${chalk.magenta(
-                    currentVersionRange.padEnd(17)
-                )} | ${chalk.blue(latestVersion.padEnd(17))} | ${chalk.gray(
-                    formattedDate.padEnd(16)
-                )} | ${selfUpgradeStatus}`
+                chalk.bold(`  Will Self-Upgrade: ${selfUpgrade ? chalk.green('Yes') : chalk.red('No')}`)
             );
+            console.log(chalk.magenta('------------------------------------------------------------'));
         });
 
     console.log(chalk.bold.cyan('\nDependency check completed.\n'));
