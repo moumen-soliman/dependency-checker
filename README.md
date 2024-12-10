@@ -1,138 +1,135 @@
 
-# **Dependency Checker**
+# Dependency Checker CLI
 
-A powerful CLI tool to analyze npm dependencies in your `package.json`. It checks if your dependencies, devDependencies, and overrides will automatically upgrade themselves based on semantic versioning rules. It also reports the latest version, publish dates, and whether the packages are up-to-date.
+**Dependency Checker CLI** is a powerful command-line tool that analyzes the dependencies in your `package.json` file. It checks for the latest versions available on npm, determines upgrade requirements, and provides insights into your project’s dependencies.
 
----
+## Features
 
-## **Features**
-- Checks `dependencies`, `devDependencies`, and `overrides`.
-- Identifies if a dependency will self-upgrade (`Yes` or `No`).
-- Displays the latest version, publish date, and self-upgrade status.
-- Allows filtering by specific packages with the `--check` option.
-- Highlights recently published versions.
+- Analyze dependencies from `package.json` (including nested dependencies in `overrides`).
+- Check for updates and classify them as major, minor, or patch.
+- Identify whether a dependency will self-upgrade based on semantic versioning rules.
+- Supports complex version ranges like `>=1.0.0 <3.0.0`.
+- Provides a clear and concise output for easy readability.
+- Compatible with `package-lock.json` and `yarn.lock`.
 
----
+## Installation
 
-## **Installation**
+Install globally using npm:
 
-1. Install globally from npm:
-   ```bash
-   npm install -g dependency-checker-cli
-   ```
+```bash
+npm install -g dependency-checker-cli
+```
 
-2. Or use directly in your project:
-   ```bash
-   npm install dependency-checker-cli --save-dev
-   ```
+Or, clone the repository and link the tool:
 
----
+```bash
+git clone https://github.com/moumen-soliman/dependency-checker-cli.git
+cd dependency-checker-cli
+npm install
+npm link
+```
 
-## **Usage**
+## Usage
 
-### **Check All Dependencies**
-Run the tool in the directory containing your `package.json`:
+### Analyze All Dependencies
+
+To analyze all dependencies in your project:
+
 ```bash
 dependency-checker-cli
 ```
 
-### **Check a Specific Package**
-To analyze a specific package, use the `--check` option:
+### Check a Specific Dependency
+
+To check a specific dependency:
+
 ```bash
 dependency-checker-cli --check <package-name>
 ```
 
-Example:
+For example:
+
 ```bash
-dependency-checker-cli --check date-fns
+dependency-checker-cli --check semver
 ```
 
----
+### Example Output
 
-## **Output Example**
-
-### **General Check**
-```bash
+```plaintext
 Checking dependencies...
 
- ✔ date-fns
-  Current Version  : ^4.1.0
-  Latest Version   : 4.1.0
-  Published Date   : 2024-09-17
-  Will Self-Upgrade: Yes
-------------------------------------------------------------
-✔ semver
-  Current Version  : ^7.6.3
-  Latest Version   : 7.6.3
-  Published Date   : 2024-07-17
-  Will Self-Upgrade: Yes
-------------------------------------------------------------
-✔ chalk
-  Current Version  : ^4.1.2
-  Latest Version   : 5.3.0
-  Published Date   : 2023-06-29
-  Will Self-Upgrade: No
+Key Descriptions:
+  Current Version Range      : The version range specified in package.json.
+  Highest Satisfying Version : The highest version that satisfies the current range in package.json.
+  Installed Version          : The version currently installed in node_modules or lock file.
+  Latest Version             : The most recent version available on npm.
+  Published Date             : The publication date of the latest version.
+  Upgrade Need Type          : The type of update required (major, minor, patch, or none).
+  Will Self-Upgrade          : Indicates if the package will self-upgrade based on the highest satisfying version.
+
+semver
+  Current Version Range      : ^7.6.3
+  Highest Satisfying Version : 7.6.3
+  Installed Version          : 7.6.3
+  Latest Version             : 7.6.3
+  Published Date             : 2024-07-17
+  Upgrade Need Type          : none
+  Will Self-Upgrade          : No
 ------------------------------------------------------------
 
 Dependency check completed.
 ```
 
-### **Check a Specific Package**
-```bash
-dependency-checker-cli --check date-fns
+### Key Descriptions
+- **Current Version Range**: The range specified in `package.json`.
+- **Highest Satisfying Version**: The highest version satisfying the current range.
+- **Installed Version**: The version currently installed locally.
+- **Latest Version**: The latest version available on npm.
+- **Published Date**: The publication date of the latest version.
+- **Upgrade Need Type**: The type of upgrade required (`major`, `minor`, `patch`, or `none`).
+- **Will Self-Upgrade**: Whether the dependency will self-upgrade within its current range.
 
-Checking dependencies...
+## Supported Files
 
-✔ date-fns
-  Current Version  : ^4.1.0
-  Latest Version   : 4.1.0
-  Published Date   : 2024-09-17
-  Will Self-Upgrade: Yes
-  Dependency check completed.
+- `package.json`
+- `package-lock.json`
+- `yarn.lock`
 
-```
+## Contributing
 
-## **How It Works**
-1. Parses `dependencies`, `devDependencies`, and `overrides` from your `package.json`.
-2. Fetches the latest version and publish date for each package using the npm registry API.
-3. Compares the version constraints in your `package.json` against the latest version to determine:
-   - If the package will self-upgrade.
-   - If the version is up-to-date.
+Contributions are welcome! Please submit issues or pull requests to the [GitHub repository](https://github.com/moumen-soliman/dependency-checker-cli).
 
----
+## Development
 
-## **Development**
+To run the tool locally:
 
-### Run Locally
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/moumen-soliman/dependency-checker-cli.git
    cd dependency-checker-cli
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
-3. Link the package locally for testing:
+3. Run the CLI:
+
    ```bash
-   npm link
+   node index.js
    ```
 
-4. Run the tool:
-   ```bash
-   dependency-checker-cli
-   ```
+## Author
 
----
+Developed by [Moumen Soliman](https://github.com/moumen-soliman).
 
-## **Contributing**
+## License
 
-Contributions are welcome! Please fork the repository and submit a pull request with your changes.
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
----
+## Issues and Bugs
 
-## **License**
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+For issues and feature requests, please visit the [GitHub Issues Page](https://github.com/moumen-soliman/dependency-checker-cli/issues).
