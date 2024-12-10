@@ -124,10 +124,6 @@ To run the tool locally:
    node index.js
    ```
 
-## Author
-
-Developed by [Moumen Soliman](https://github.com/moumen-soliman).
-
 ## License
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
