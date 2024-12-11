@@ -3,6 +3,8 @@
 
 **Dependency Checker CLI** is a powerful command-line tool that analyzes the dependencies in your `package.json` file. It checks for the latest versions available on npm, determines upgrade requirements, and provides insights into your project’s dependencies.
 
+![Demo](./demo.gif)
+
 ## Features
 
 - Analyze dependencies from `package.json` (including nested dependencies in `overrides`).
